@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: real_estate_db
+    environment:
+      POSTGRES_DB: real_estate
+      POSTGRES_USER: django_user
+      POSTGRES_PASSWORD: secretpassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  web:
+    build: .
+    container_name: real_estate_web
+    command: /app/entrypoint.sh
+    volumes:
+      - .:/app
+      # Do not mount local staticfiles and media directories directly to prevent overriding container's collected files
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=your-super-secret-docker-key-change-me
+      - DATABASE_URL=postgres://django_user:secretpassword@db:5432/real_estate
+      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+      - CSRF_TRUSTED_ORIGINS=http://localhost:8000,http://127.0.0.1:8000
+      # Reference your host environment variable or replace this
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    depends_on:
+      - db
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
