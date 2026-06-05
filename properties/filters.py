@@ -30,7 +30,7 @@ class PropertyFilter(django_filters.FilterSet):
         model = Property
         fields = [
             'property_type', 'listing_type', 'city', 'state',
-            'country', 'is_featured',
+            'country', 'is_featured', 'bedrooms',
         ]
 
     def search_filter(self, queryset, name, value):
