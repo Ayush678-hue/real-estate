@@ -24,6 +24,12 @@ def api_root(request):
         'properties': reverse('properties:property-list', request=request),
         'agents': reverse('agents:agent-list', request=request),
         'inquiries': reverse('inquiries:inquiry-list', request=request),
+        'ai_services': {
+            'generate_description': reverse('ai_services:generate-description', request=request),
+            'estimate_value': reverse('ai_services:estimate-value', request=request),
+            'chat': reverse('ai_services:chat', request=request),
+            'tag_image': reverse('ai_services:tag-image', request=request),
+        },
     })
 
 
@@ -39,6 +45,7 @@ urlpatterns = [
     path('api/v1/properties/', include('properties.urls', namespace='properties')),
     path('api/v1/agents/', include('agents.urls', namespace='agents')),
     path('api/v1/inquiries/', include('inquiries.urls', namespace='inquiries')),
+    path('api/v1/ai/', include('ai_services.urls', namespace='ai_services')),
 
     # DRF browsable API login
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),

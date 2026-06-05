@@ -4,6 +4,9 @@ Django settings for real_estate project.
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,6 +41,7 @@ INSTALLED_APPS = [
     'properties',
     'agents',
     'inquiries',
+    'ai_services',
 ]
 
 MIDDLEWARE = [
@@ -156,3 +160,8 @@ REST_FRAMEWORK = {
 
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True  # Change in production
+
+
+# Google Gemini AI Configuration
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
+GEMINI_MODEL_NAME = 'gemini-2.0-flash'

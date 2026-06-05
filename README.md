@@ -2,6 +2,17 @@
 
 A comprehensive, production-ready REST API backend for a real estate platform, built with **Django 5.1** and **Django REST Framework**. This project provides a robust foundation for managing property listings, agent profiles, user authentication, and customer inquiries — everything needed to power a modern real estate marketplace.
 
+## 🤖 AI-Powered Features
+
+This project integrates **Google Gemini AI** to provide intelligent automation capabilities:
+
+| Feature | Endpoint | Description |
+|---------|----------|-------------|
+| **AI Descriptions** | `POST /api/v1/ai/generate-description/` | Auto-generates compelling marketing copy from property attributes |
+| **Automated Valuation** | `POST /api/v1/ai/estimate-value/` | Estimates property prices using comparable data + AI analysis |
+| **Real Estate Chatbot** | `POST /api/v1/ai/chat/` | Conversational AI assistant that answers questions using your property database |
+| **Image Auto-Tagging** | `POST /api/v1/ai/tag-image/` | Detects features in property photos (room type, amenities, quality score) |
+
 ## 🚀 About The Project
 
 The Real Estate Backend API is designed to serve as the backbone for any real estate application, whether it's a web platform, mobile app, or a combination of both. It follows industry best practices in API design, security, and data modeling to deliver a scalable and maintainable solution.
@@ -10,12 +21,15 @@ At its core, the system revolves around four key modules. The **Accounts** modul
 
 The **Agents** module manages real estate agent profiles linked to user accounts, tracking license numbers, agency affiliations, years of experience, and specializations. Agents can be verified by administrators and are the only users authorized to create and manage property listings. The **Inquiries** module enables potential buyers or renters to send inquiries about specific properties, with a status workflow that tracks each inquiry from new to responded to closed.
 
+The **AI Services** module adds intelligent automation to the platform using Google Gemini. It can auto-generate marketing descriptions for property listings, estimate property values based on comparable sales data, power a conversational chatbot that helps buyers find properties using natural language, and automatically analyze property images to detect room types, features, and quality.
+
 The API implements role-based access control, ensuring that agents can only modify their own listings while buyers can browse freely and submit inquiries. Built-in pagination, search functionality, and ordering make it effortless to handle large datasets. The project uses SQLite for development simplicity but can easily be configured for PostgreSQL or MySQL in production environments.
 
 ## 🛠️ Tech Stack
 
 - **Framework:** Django 5.1
 - **API:** Django REST Framework 3.15
+- **AI Engine:** Google Gemini (gemini-2.0-flash)
 - **Authentication:** Token-based Authentication
 - **Filtering:** django-filter
 - **CORS:** django-cors-headers
@@ -26,11 +40,15 @@ The API implements role-based access control, ensuring that agents can only modi
 
 ```bash
 # Clone the repository
-git clone <your-repo-url>
-cd real-estates
+git clone https://github.com/Ayush678-hue/real-estate.git
+cd real-estate
 
 # Install dependencies
 pip install -r requirements.txt
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env and add your GEMINI_API_KEY
 
 # Run migrations
 python manage.py migrate
@@ -78,6 +96,49 @@ python manage.py runserver
 | POST | `/api/v1/inquiries/` | Send an inquiry |
 | GET | `/api/v1/inquiries/` | List inquiries |
 | PATCH | `/api/v1/inquiries/{id}/` | Update inquiry status |
+
+### 🤖 AI Services
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/v1/ai/generate-description/` | Generate AI marketing copy for a property |
+| POST | `/api/v1/ai/estimate-value/` | Estimate property market value |
+| POST | `/api/v1/ai/chat/` | Chat with AI real estate assistant |
+| POST | `/api/v1/ai/tag-image/` | Auto-tag property images |
+
+## 🤖 AI Services Usage
+
+### Generate Property Description
+```bash
+curl -X POST http://localhost:8000/api/v1/ai/generate-description/ \
+  -H "Content-Type: application/json" \
+  -d '{"property_id": 1, "save": false}'
+```
+
+### Estimate Property Value
+```bash
+curl -X POST http://localhost:8000/api/v1/ai/estimate-value/ \
+  -H "Content-Type: application/json" \
+  -d '{"property_type": "apartment", "bedrooms": 3, "area_sqft": 1500, "city": "Mumbai"}'
+```
+
+### Chat with AI Assistant
+```bash
+# Start a new conversation
+curl -X POST http://localhost:8000/api/v1/ai/chat/ \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Show me apartments under 50 lakhs in Mumbai"}'
+
+# Continue the conversation
+curl -X POST http://localhost:8000/api/v1/ai/chat/ \
+  -H "Content-Type: application/json" \
+  -d '{"session_id": "your-session-id", "message": "Which one has the most bedrooms?"}'
+```
+
+### Auto-Tag Property Image
+```bash
+curl -X POST http://localhost:8000/api/v1/ai/tag-image/ \
+  -F "image=@photo.jpg"
+```
 
 ## 🔍 Property Filters
 

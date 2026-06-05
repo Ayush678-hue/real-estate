@@ -82,6 +82,12 @@ class PropertyImage(models.Model):
     )
     image = models.ImageField(upload_to='property_images/')
     is_primary = models.BooleanField(default=False)
+    auto_tags = models.JSONField(
+        blank=True,
+        null=True,
+        default=None,
+        help_text='AI-generated tags from image analysis',
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
